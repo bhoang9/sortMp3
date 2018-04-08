@@ -1,22 +1,35 @@
-import mutagen,os
-from mutagen.mp3 import EasyMP3
+#currently: parsing mp3 files and getting their metadata
+#TODO: in cases where mp3 file may not have metadata, somehow
+#      get that metadata from the internet and assign it to that file
 
+import mutagen, os, magic
+from mutagen.mp3 import EasyMP3
+from mutagen import MutagenError
+
+
+#get the current directory's files
+os.chdir(os.getcwd() + "/music_samples")
 files = os.listdir(os.getcwd())
 
 print(files)
 
 #get audio file metadata
-audio = mutagen.File("nujabes.mp3", None, True)
-audio1 = mutagen.File("InTheEnd.mp3", None, True)
-#audio2 = mutagen.File("pianoMan.mp3")
+for mp3_file in files:
+    if(mp3_file.endswith('.mp3')):
+        print(mp3_file)
+        audio = mutagen.File(mp3_file, None, True)
+        print(audio.tags)
+        print("\n") 
+        #print(audio.tags['title'])
+        #print(audio.tags['artist'])
 
-print(audio.tags)
-#print(audio['TPE1'])
-#print(audio['TIT2'])
+#try:
+#    audio = mutagen.File("test_folder", None, True)
+#except MutagenError:
+#    print("That's not an mp3 file!")
 
-print(audio1.tags)
+#print(audio.tags['title'])
 
+#print(audio1.tags['title'])
+#print(audio2.tags['title'])
 
-#print(audio1['TIT2'])
-#print(audio2['TPE1'])
-#print(audio2['TIT2'])
