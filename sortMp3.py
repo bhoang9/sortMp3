@@ -1,9 +1,13 @@
-#currently: able to run through files and acquire song name and artist
-#GOAL: in cases where mp3 file may not have metadata, somehow
-#      get that metadata from the internet and assign it to that file
+#Currently: able to run through files and acquire song name and artist
+#           able to acquire metadata from an internet database
+
+#GOAL:      Need to decide on how to determine how and when to search
+#           database for information
+
 
 import musicbrainzngs
-import mutagen, os #, magic
+import mutagen, os
+from tagSearch import songDataTest
 from mutagen.mp3 import EasyMP3
 from mutagen import MutagenError
 
@@ -13,7 +17,7 @@ musicbrainzngs.set_useragent("sortMp3", "0.1")
 os.chdir(os.getcwd() + "/music_samples")
 files = os.listdir(os.getcwd())
 
-print(files)
+#print(files)
 
 #get audio file metadata
 for mp3_file in files:
@@ -26,29 +30,26 @@ for mp3_file in files:
             audio.tags = []         #if file could not be loaded, wipe previous
                                     #audio tags
 
-        if not audio.tags:          #if audio tags are empty
+        if not audio.tags:
             print("empty tags \n")
         else:
-            #print(audio.tags)
             if 'title' not in audio.tags:
-                print("empty title")
+                print("no title tag")
             else:
-                print(audio.tags['title'])
-            if 'artist' not in audio.tags:
-                print("empty artist")
-            else:
-                print(audio.tags['artist'])
+                songDataTest(audio.tags['title'])
+
+#        if not audio.tags:          #if audio tags are empty
+#            print("empty tags \n")
+#        else:
+            #print(audio.tags)
+#            if 'title' not in audio.tags:
+#                print("empty title")
+#            else:
+#                print(audio.tags['title'])
+#            if 'artist' not in audio.tags:
+#                print("empty artist")
+#            else:
+#                print(audio.tags['artist'])
         print("\n") 
-        #print(audio.tags['title'])
-        #print(audio.tags['artist'])
 
-#try:
-#    audio = mutagen.File("test_folder", None, True)
-#except MutagenError:
-#    print("That's not an mp3 file!")
-
-#print(audio.tags['title'])
-
-#print(audio1.tags['title'])
-#print(audio2.tags['title'])
 
