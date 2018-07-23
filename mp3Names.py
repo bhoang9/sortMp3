@@ -19,11 +19,8 @@ from mutagen import MutagenError
 musicbrainzngs.set_useragent("sortMp3", "0.1")
 
 #get the current directory's files
-os.chdir(os.getcwd() + "/music_samples_testing")
-files = os.listdir(os.getcwd())
-artists = []
 
-def correctFileNames():
+def correctFileNames(files):
     for mp3File in files:
         fileIndex = files.index(mp3File)
         correctMp3File = mp3File.replace("_", " ")
@@ -46,7 +43,7 @@ def correctFileNames():
 #runs through each file, checks for the correct format, and
 #creates a new folder for that artist
 
-def createFolders():
+def createFolders(files):
     for mp3_file in files:
         #if file's name contains " - ", we assume(for now), it is the artist name
         if((mp3_file.endswith('.mp3')) and (" - " in mp3_file)):
@@ -76,7 +73,3 @@ def replaceDash(mp3Name):
             return True
         else:
             return False
- 
-
-correctFileNames()
-createFolders()
