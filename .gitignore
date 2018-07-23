@@ -1,0 +1,5 @@
+#ignore music files 
+music_samples/
+music_samples_small/
+music_samples_testing/
+__pycache__/

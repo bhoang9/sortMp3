@@ -10,19 +10,19 @@ musicData.set_useragent("dataSearch_test", "0.1")
 result = musicData.search_artists(artist="green day")
 
 #search database for a specific song, get first 5 results
-result2 = musicData.search_recordings("morgan page the longest road deadmau5 remix", limit=5)
+#result2 = musicData.search_recordings("morgan page the longest road deadmau5 remix", limit=5)
 
 #TESTING: printing from artist search
 #for artists in result['artist-list']:
 #        print(artists['name'])
 
 #TESTING: if search yields no results
-if(result2['recording-list'] == []):
-    print("empty")
+#if(result2['recording-list'] == []):
+#    print("empty")
 
 #TESTING: printing from song search
-for recordings in result2['recording-list']:
-        print(recordings['title'] + " | artist " + recordings['artist-credit-phrase'])
+#for recordings in result2['recording-list']:
+#        print(recordings['title'] + " | artist " + recordings['artist-credit-phrase'])
 
 #function: Get correct song tags given song and artist name
 #givenArtist would ideally be provided from the parsed file string
