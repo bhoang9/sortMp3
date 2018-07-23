@@ -28,14 +28,13 @@ def correctFileNames():
         fileIndex = files.index(mp3File)
         correctMp3File = mp3File.replace("_", " ")
 
-#if we find a file with the format artist-song w/o the space
-#replace the single "-" w/ a space
-        match = re.search(r'\w-\w',mp3File)
-        match1 = re.search(r'\w-\W',mp3File)
-        match2 = re.search(r'\W-\w',mp3File)
-        if((match != None) or (match1 != None) or (match2 != None)):
-                #print("match: " + match.group())
-                correctMp3File = correctMp3File.replace("-", " - ")
+        if(replaceDash(mp3File)):
+            #print("match: " + match.group())
+            correctMp3File = correctMp3File.replace("-", " - ")
+            spaceMatch = re.search(r'\s+-\s+', correctMp3File)
+            if(spaceMatch):
+                correctMp3File = correctMp3File.replace(spaceMatch.group(), " - ")
+                    
                 #print("corrected: " + mp3File + " -> " + correctMp3File)
 
         os.rename(mp3File, correctMp3File)
@@ -49,6 +48,7 @@ def correctFileNames():
 
 def createFolders():
     for mp3_file in files:
+        #if file's name contains " - ", we assume(for now), it is the artist name
         if((mp3_file.endswith('.mp3')) and (" - " in mp3_file)):
             artist = mp3_file.split(" - ", 1)[0]
             print(mp3_file)
@@ -57,14 +57,26 @@ def createFolders():
             #if correct file format, create new folder
             #library creates new folder, handles if folder already exists
             createFolder(mp3_file, artist)
-           # pathlib.Path(artist).mkdir(parents=True,exist_ok=True)
-           # shutil.move(mp3_file, artist+"/"+mp3_file) #move file to new folder
 
 #creates a new folder with the name of "artist" variable
 #moves the mp3 file into this new folder
 def createFolder(mp3_file, artist):
     pathlib.Path(artist).mkdir(parents=True,exist_ok=True)
     shutil.move(mp3_file, artist+"/"+mp3_file)
+
+#Use regex to find names w/ "w-w" format w/ "w - w" where
+# w is any letter or number
+def replaceDash(mp3Name):
+        match0 = re.search(r'\w-\w',mp3Name)
+        match1 = re.search(r'\w-\W',mp3Name)
+        match2 = re.search(r'\W-\w',mp3Name)
+        match3 = re.search(r'\W-\W',mp3Name)
+
+        if(match0 or match1 or match2 or match3):
+            return True
+        else:
+            return False
+ 
 
 correctFileNames()
 createFolders()
