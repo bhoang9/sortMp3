@@ -2,12 +2,17 @@
 #still need to test
 
 import musicbrainzngs as musicData
+import mutagen
 import os
+import Levenshtein
+from mutagen.mp3 import EasyMP3
+from mutagen.easyid3 import EasyID3
+from mutagen import MutagenError
 
 musicData.set_useragent("dataSearch_test", "0.1")
 
 #search database for a specific artist
-result = musicData.search_artists(artist="green day")
+#result = musicData.search_artists(artist="green day")
 
 #search database for a specific song, get first 5 results
 #result2 = musicData.search_recordings("morgan page the longest road deadmau5 remix", limit=5)
@@ -23,6 +28,48 @@ result = musicData.search_artists(artist="green day")
 #TESTING: printing from song search
 #for recordings in result2['recording-list']:
 #        print(recordings['title'] + " | artist " + recordings['artist-credit-phrase'])
+
+
+#Get song's current metadata
+def getMetadata(mp3_file):
+    metaData = []
+
+    try:
+        audio = EasyID3(mp3_file)
+    except MutagenError:
+        print("Failed to load file \n")
+        return None
+
+    if not audio:
+        return None
+    elif 'title' not in audio:
+        return None
+    elif 'artist' not in audio:
+        return None
+
+    #set the title and artist of the song as elements 0 and 1 of the list
+    #respectively
+    else:
+        metaData.append(audio['title'][0].replace(" ", "").lower())
+        metaData.append(audio['artist'][0].replace(" ","").lower())
+        metaData.append(audio['title'][0])
+        metaData.append(audio['artist'][0])
+
+        return metaData
+
+def checkMetaData(mp3_file):
+    
+    givenArtist = mp3_File.slit(" - ",1)[0].lower()
+    givenSong = mp3File.split(" - ",1)[1].lower()
+    metaData = getMetadata(mp3_file)
+    metaDataReturn = []
+
+    if(Levenshtein.ratio(givenArtist, metaData[0]) == 0):
+        metaDataReturn.append(metaData[2])
+        metaDataReturn.append(metaData[3])
+
+    return metaDataReturn
+
 
 #function: Get correct song tags given song and artist name
 #givenArtist would ideally be provided from the parsed file string
@@ -49,10 +96,11 @@ def getSongData(songName, givenArtist):
         return songTags
    
 def songDataTest(songName):
-    songData = musicData.search_recordings(songName, limit=1)
+    songData = musicData.search_recordings(songName, limit=5)
 
     for songData in songData['recording-list']:
         if(songData == []):
             print("empty")
         else:
             print("title: " + songData['title'] + " | artist: " + songData['artist-credit-phrase'])
+

@@ -11,5 +11,5 @@ def main():
     mp3Names.createFolders(files)
 
 
-main()
+#main()
 

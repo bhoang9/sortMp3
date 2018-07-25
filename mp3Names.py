@@ -6,7 +6,6 @@
 #GOALS: 
 #       -Make the name correction process more robust
 #       -Use given metadata to determine if the name is correct or not
-#       -Have a main file and modularize these functions
 import musicbrainzngs
 import mutagen, os
 import pathlib, shutil
@@ -16,8 +15,6 @@ from mutagen.mp3 import EasyMP3
 from mutagen.easyid3 import EasyID3
 from mutagen import MutagenError
 
-musicbrainzngs.set_useragent("sortMp3", "0.1")
-
 #get the current directory's files
 
 def correctFileNames(files):
@@ -26,14 +23,14 @@ def correctFileNames(files):
         correctMp3File = mp3File.replace("_", " ")
 
         if(replaceDash(mp3File)):
-            #print("match: " + match.group())
             correctMp3File = correctMp3File.replace("-", " - ")
+
+            tagSearch.checkMetadata(mp3File)
+
             spaceMatch = re.search(r'\s+-\s+', correctMp3File)
             if(spaceMatch):
                 correctMp3File = correctMp3File.replace(spaceMatch.group(), " - ")
                     
-                #print("corrected: " + mp3File + " -> " + correctMp3File)
-
         os.rename(mp3File, correctMp3File)
         files[fileIndex] = correctMp3File
 
